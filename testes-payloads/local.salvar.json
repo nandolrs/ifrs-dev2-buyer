@@ -1,0 +1,8 @@
+- post
+
+localhost:8080/api/local/salvar
+
+{
+  "id":"0"
+  ,"nome":"local-heroku-3"
+}

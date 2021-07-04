@@ -10,17 +10,17 @@ public class Local {
 
     @Id
     @GeneratedValue(strategy= GenerationType.AUTO)
-    Integer id;
+    Long id;
 
     String nome;
 
     // id
 
-    public Integer getId()
+    public Long getId()
     {
         return this.id;
     }
-    public void setId(Integer valor)
+    public void setId(Long valor)
     {
         this.id=valor;
     }
@@ -32,6 +32,4 @@ public class Local {
     {
         this.nome=valor;
     }
-
-
 }
