@@ -6,7 +6,7 @@ import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-
+ //ok
 @RestController
 @RequestMapping(path="/api/classe")
 public class ClasseController  {
