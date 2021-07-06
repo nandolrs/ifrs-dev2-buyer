@@ -13,6 +13,7 @@ public class ProdutoController  {
 
     long ID_NAO_ENCONTRADO = -1;
 
+    //Comentario teste do Rafael
     @Autowired
     private ifrs.dev2.buyer.repositorios.ProdutoRepository repositorio;
 
