@@ -12,8 +12,8 @@ import javax.persistence.Id;
 import javax.print.attribute.standard.Media;
 import java.util.List;
 
-@RestController // This means that this class is a Controller
-@RequestMapping(path="/api/local") // This means URL's start with /demo (after Application path)
+@RestController
+@RequestMapping(path="/api/local") 
 public class UnidadeDeMedidaController  {
 	
 	long ID_NAO_ENCONTRADO = -1;
