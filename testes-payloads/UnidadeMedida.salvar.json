@@ -1,0 +1,14 @@
+- post
+
+localhost:8080/api/UnidadeMedida/salvar
+
+{
+"id":"0",
+"nome":"litro",
+"sigla": "l"
+}
+{
+"id":"1",
+"nome":"quilo",
+"sigla": "Kg"
+}
