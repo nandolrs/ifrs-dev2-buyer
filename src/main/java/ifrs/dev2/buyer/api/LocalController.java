@@ -2,7 +2,12 @@ package ifrs.dev2.buyer.api;
 
 import ifrs.dev2.buyer.dados.DadoInterface;
 import ifrs.dev2.buyer.dados.Local;
+import ifrs.dev2.buyer.erros.ErroBase;
+import ifrs.dev2.buyer.erros.ErroItem;
+import ifrs.dev2.buyer.respostas.LocalResponse;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Sort;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
@@ -26,25 +31,64 @@ public class LocalController  {
             , consumes = {MediaType.APPLICATION_JSON_VALUE}
             , produces = {MediaType.APPLICATION_JSON_VALUE}
     ) // Map ONLY POST Requests
+
     public @ResponseBody
-    ifrs.dev2.buyer.dados.Local Salvar(@RequestBody ifrs.dev2.buyer.dados.Local entidade) {
+    ifrs.dev2.buyer.dados.Local Salvar(@RequestHeader HttpHeaders headers, @RequestBody ifrs.dev2.buyer.dados.Local entidade) throws Exception {
         // @ResponseBody means the returned String is the response, not a view name
         // @RequestParam means it is a parameter from the GET or POST request
+
+        //ErroLancar();
 
         repositorio.save(entidade);
 
         return entidade;
     }
 
+
+    void ErroLancar() throws Exception {
+        throw new Exception("deu merda");
+    }
+    //@CrossOrigin() // origins = "http://localhost:3000"
     @GetMapping(
             value = "pesquisar"
             , produces = {MediaType.APPLICATION_JSON_VALUE}
     )
     public @ResponseBody
-    List<Local> Pesquisar(@RequestParam String nome) {
+    LocalResponse Pesquisar(@RequestHeader HttpHeaders headers,@RequestParam String nome) // @RequestHeader HttpHeaders headers,
+    {
+        try
+        {
+            List<Local> retorno = null;
 
-        List<Local> retorno = repositorio.findByNomeContaining(nome);
-        return retorno;
+            if(nome.length() > 0)
+            {
+                retorno = repositorio.findByNomeContaining(nome);
+            }
+            else
+            {
+                //Sort sort = new Sort(direction, ordering);
+                //PageRequest page = new PageRequest(xoffset, xbase, sort);
+
+                //retorno = repositorio.findAll(Sort.by(Sort.Direction.ASC, "nome"));
+
+                retorno = repositorio.findByNomeContaining(nome);
+            }
+
+           // ErroLancar();
+
+            return new LocalResponse( null,null,retorno);
+        }
+        catch(Exception e)
+        {
+            String msg = "deu merda";
+
+            ErroItem item = new ErroItem("",msg,-1L);
+            //ErroBase erroBase = new ErroBase(e);
+            ErroBase erroBase = new ErroBase(item);
+
+            LocalResponse retorno = new  LocalResponse(null, erroBase, null) ;
+            return retorno;
+        }
     }
 
     @GetMapping(
@@ -52,27 +96,37 @@ public class LocalController  {
             , produces = {MediaType.APPLICATION_JSON_VALUE}
     )
     public @ResponseBody
-    Local Consultar(@PathVariable Long id) {
+    LocalResponse Consultar(@RequestHeader HttpHeaders headers, @PathVariable Long id) {
 
         Local retorno = new Local();
         try
         {
             retorno  = repositorio.findById(id).get();
+
+            return new LocalResponse( retorno,null,null);
         }
 
         catch (Exception e)
         {
-         retorno.setId(ID_NAO_ENCONTRADO);
+             retorno.setId(ID_NAO_ENCONTRADO);
+
+            String msg = "deu merda";
+
+            ErroItem item = new ErroItem("",msg,-1L);
+            //ErroBase erroBase = new ErroBase(e);
+            ErroBase erroBase = new ErroBase(item);
+
+            return  new  LocalResponse(null, erroBase, null) ;
+
         }
 
-        return retorno;
     }
 
     @GetMapping(
             path="excluir/{id}"
             ,produces = {MediaType.APPLICATION_JSON_VALUE}
     )
-    public @ResponseBody  Local Excluir(@PathVariable Long   id) {
+    public @ResponseBody  Local Excluir(@RequestHeader HttpHeaders headers, @PathVariable Long   id) {
 
         Local retorno = new Local();
         try
