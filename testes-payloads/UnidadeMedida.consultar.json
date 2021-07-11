@@ -1,0 +1,4 @@
+- get
+
+localhost:8080/api/UnidadeMedida/consultar/28
+localhost:8080/api/UnidadeMedida/consultar/26

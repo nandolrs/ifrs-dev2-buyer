@@ -1,0 +1,4 @@
+- get
+
+localhost:8080/api/UnidadeMedida/pesquisar?nome=litro
+localhost:8080/api/UnidadeMedida/pesquisar?nome=quilo
