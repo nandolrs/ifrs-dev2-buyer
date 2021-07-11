@@ -45,9 +45,6 @@ public class LocalController  {
     }
 
 
-    void ErroLancar() throws Exception {
-        throw new Exception("deu merda");
-    }
     //@CrossOrigin() // origins = "http://localhost:3000"
     @GetMapping(
             value = "pesquisar"
@@ -142,5 +139,10 @@ public class LocalController  {
 
         return retorno;
     }
+
+    void ErroLancar() throws Exception {
+        throw new Exception("deu merda");
+    }
+
 }
 
