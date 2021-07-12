@@ -35,56 +35,5 @@ public class UsuarioController  {
        return entidade;
     }
     
-    /*@GetMapping(
-            value = "pesquisar"
-            , produces = {MediaType.APPLICATION_JSON_VALUE}
-    )
-    public @ResponseBody
-    List<Usuario> Pesquisar(@RequestParam String nome) {
-
-        List<Usuario> retorno = repositorio.findByNomeContaining(nome);
-        return retorno;
-    }
-
-    @GetMapping(
-             path="consultar/{id}"
-            , produces = {MediaType.APPLICATION_JSON_VALUE}
-    )
-    public @ResponseBody
-    Usuario Consultar(@PathVariable Long id) {
-
-        Usuario retorno = new Usuario();
-        try
-        {
-            retorno  = repositorio.findById(id).get();
-        }
-
-        catch (Exception e)
-        {
-         retorno.setId(ID_NAO_ENCONTRADO);
-        }
-
-        return retorno;
-    }
-
-    @GetMapping(
-            path="excluir/{id}"
-            ,produces = {MediaType.APPLICATION_JSON_VALUE}
-    )
-    public @ResponseBody  Usuario Excluir(@PathVariable Long   id) {
-
-        Usuario retorno = new Usuario();
-        try
-        {
-            retorno  = repositorio.findById(id).get();
-            repositorio.deleteById(retorno.getId());
-        }
-
-        catch (Exception e)
-        {
-            retorno.setId(ID_NAO_ENCONTRADO);
-        }
-
-        return retorno;
-    }*/
+    
 }
