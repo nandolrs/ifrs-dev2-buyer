@@ -73,15 +73,10 @@ public class ClasseController  {
             }
             else
             {
-                //Sort sort = new Sort(direction, ordering);
-                //PageRequest page = new PageRequest(xoffset, xbase, sort);
-
-                //retorno = repositorio.findAll(Sort.by(Sort.Direction.ASC, "nome"));
-
                 retorno = repositorio.findByNomeContaining(nome);
             }
 
-            // ErroLancar();
+            retorno.sort(Comparator.comparing(Classe::getNome ));
 
             return new ClasseResponse( null,null,retorno);
         }
@@ -163,20 +158,10 @@ public class ClasseController  {
     {
         try
         {
-            List<Classe> retorno = null;
-
-            //Sort sort = new Sort(direction, ordering);
-            //PageRequest page = new PageRequest(xoffset, xbase, sort);
-
-            //retorno = repositorio.findAll(Sort.by(Sort.Direction.ASC, "nome"));
-
             String nome="";
-            retorno = repositorio.findByNomeContaining(nome);
+            List<Classe> retorno = retorno = repositorio.findByNomeContaining(nome);
 
             retorno.sort(Comparator.comparing(Classe::getNome ));
-            //Sort sort = new Sort(Sort.Direction.ASC, "nome");
-
-            // ErroLancar();
 
             return new ClasseResponse( null,null,retorno);
         }

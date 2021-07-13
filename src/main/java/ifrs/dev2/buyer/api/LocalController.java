@@ -1,5 +1,6 @@
 package ifrs.dev2.buyer.api;
 
+import ifrs.dev2.buyer.dados.Classe;
 import ifrs.dev2.buyer.dados.DadoInterface;
 import ifrs.dev2.buyer.dados.Local;
 import ifrs.dev2.buyer.erros.ErroBase;
@@ -14,6 +15,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.persistence.Id;
 import javax.print.attribute.standard.Media;
+import java.util.Comparator;
 import java.util.List;
 
 @RestController // This means that this class is a Controller
@@ -74,13 +76,10 @@ public class LocalController  {
             }
             else
             {
-                //Sort sort = new Sort(direction, ordering);
-                //PageRequest page = new PageRequest(xoffset, xbase, sort);
-
-                //retorno = repositorio.findAll(Sort.by(Sort.Direction.ASC, "nome"));
-
                 retorno = repositorio.findByNomeContaining(nome);
             }
+
+            retorno.sort(Comparator.comparing(Local::getNome ));
 
             return new LocalResponse( null,null,retorno);
         }
