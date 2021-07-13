@@ -33,15 +33,28 @@ public class ProdutoController  {
     ) // Map ONLY POST Requests
 
     public @ResponseBody
-    ifrs.dev2.buyer.dados.Produto Salvar(@RequestHeader HttpHeaders headers, @RequestBody ifrs.dev2.buyer.dados.Produto entidade) throws Exception {
+    ifrs.dev2.buyer.respostas.ProdutoResponse Salvar(@RequestHeader HttpHeaders headers, @RequestBody ifrs.dev2.buyer.dados.Produto entidade) throws Exception {
         // @ResponseBody means the returned String is the response, not a view name
         // @RequestParam means it is a parameter from the GET or POST request
 
-        //ErroLancar();
+        try
+        {
+            repositorio.save(entidade);
 
-        repositorio.save(entidade);
+            return new ProdutoResponse( entidade,null,null);
+        }
 
-        return entidade;
+        catch (Exception e)
+        {
+            String msg = "deu merda";
+
+            ErroItem item = new ErroItem("",msg,-1L);
+            //ErroBase erroBase = new ErroBase(e);
+            ErroBase erroBase = new ErroBase(item);
+
+            ProdutoResponse retorno = new  ProdutoResponse(null, erroBase, null) ;
+            return retorno;
+        }
     }
 
 
