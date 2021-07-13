@@ -19,7 +19,7 @@ public class EmbalagemController {
     long ID_NAO_ENCONTRADO = -1;
     @Autowired
     private ifrs.dev2.buyer.repositorios.EmbalagemRepository repositorio;
-    //insert
+    //insertt
     @PostMapping(
             value = "salvar"
             , consumes = {MediaType.APPLICATION_JSON_VALUE}
