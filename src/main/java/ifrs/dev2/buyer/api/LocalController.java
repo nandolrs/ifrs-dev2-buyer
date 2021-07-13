@@ -1,5 +1,6 @@
 package ifrs.dev2.buyer.api;
 
+import ifrs.dev2.buyer.dados.Classe;
 import ifrs.dev2.buyer.dados.DadoInterface;
 import ifrs.dev2.buyer.dados.Local;
 import ifrs.dev2.buyer.erros.ErroBase;
@@ -14,6 +15,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.persistence.Id;
 import javax.print.attribute.standard.Media;
+import java.util.Comparator;
 import java.util.List;
 
 @RestController // This means that this class is a Controller
@@ -33,15 +35,26 @@ public class LocalController  {
     ) // Map ONLY POST Requests
 
     public @ResponseBody
-    ifrs.dev2.buyer.dados.Local Salvar(@RequestHeader HttpHeaders headers, @RequestBody ifrs.dev2.buyer.dados.Local entidade) throws Exception {
-        // @ResponseBody means the returned String is the response, not a view name
-        // @RequestParam means it is a parameter from the GET or POST request
+    ifrs.dev2.buyer.respostas.LocalResponse Salvar(@RequestHeader HttpHeaders headers, @RequestBody ifrs.dev2.buyer.dados.Local entidade) throws Exception {
 
-        //ErroLancar();
+        try
+        {
+            repositorio.save(entidade);
 
-        repositorio.save(entidade);
+            return new LocalResponse( entidade,null,null);
+        }
 
-        return entidade;
+        catch(Exception e)
+        {
+            String msg = "deu merda";
+
+            ErroItem item = new ErroItem("",msg,-1L);
+            //ErroBase erroBase = new ErroBase(e);
+            ErroBase erroBase = new ErroBase(item);
+
+            LocalResponse retorno = new  LocalResponse(null, erroBase, null) ;
+            return retorno;
+        }
     }
 
 
@@ -63,15 +76,10 @@ public class LocalController  {
             }
             else
             {
-                //Sort sort = new Sort(direction, ordering);
-                //PageRequest page = new PageRequest(xoffset, xbase, sort);
-
-                //retorno = repositorio.findAll(Sort.by(Sort.Direction.ASC, "nome"));
-
                 retorno = repositorio.findByNomeContaining(nome);
             }
 
-           // ErroLancar();
+            retorno.sort(Comparator.comparing(Local::getNome ));
 
             return new LocalResponse( null,null,retorno);
         }
@@ -84,6 +92,7 @@ public class LocalController  {
             ErroBase erroBase = new ErroBase(item);
 
             LocalResponse retorno = new  LocalResponse(null, erroBase, null) ;
+
             return retorno;
         }
     }
