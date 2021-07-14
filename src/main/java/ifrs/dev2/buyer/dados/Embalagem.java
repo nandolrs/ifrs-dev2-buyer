@@ -3,7 +3,7 @@ package ifrs.dev2.buyer.dados;
 import javax.persistence.*;
 
 @Entity // This tells Hibernate to make a table out of this class
-public class Produto {
+public class Embalagem {
 
     @Id
     @GeneratedValue(strategy= GenerationType.AUTO)
@@ -11,8 +11,10 @@ public class Produto {
 
     String nome;
 
+    private Float capacidade;
+
     @OneToOne
-    private Classe classe;
+    private UnidadeMedida unidadeMedida;
 
     // id
 
@@ -25,7 +27,7 @@ public class Produto {
         this.id=valor;
     }
 
-    // name
+    // nome
 
     public String getNome(){return this.nome;}
     public void setNome(String valor)
@@ -33,13 +35,23 @@ public class Produto {
         this.nome=valor;
     }
 
-    // classe
+    // capacidade
 
-    public Classe getClasse() {
-        return classe;
+    public Float getCapacidade() {
+        return capacidade;
     }
 
-    public void setClasse(Classe classe) {
-        this.classe = classe;
+    public void setCapacidade(Float capacidade) {
+        this.capacidade = capacidade;
+    }
+
+    // unidade de medida
+
+    public UnidadeMedida getUnidadeMedida() {
+        return unidadeMedida;
+    }
+
+    public void setUnidadeMedida(UnidadeMedida unidadeMedida) {
+        this.unidadeMedida = unidadeMedida;
     }
 }
