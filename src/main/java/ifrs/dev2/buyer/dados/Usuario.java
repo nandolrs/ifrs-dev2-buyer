@@ -40,7 +40,7 @@ public class Usuario {
 
     // email
 
-    public String getEmail()    {        return this.email;    }
+    public String getEmail()    { return this.email; }
     public void setEmail(String valor)
     {
         this.email=valor;
@@ -49,7 +49,7 @@ public class Usuario {
 
     // senha
 
-    public String getPassword()    {        return this.senha;    }
-    public void setPassword(String valor)    {        this.senha=valor;    }
+    public String getPassword()    { return this.senha; }
+    public void setPassword(String valor)    { this.senha=valor; }
 
 }
