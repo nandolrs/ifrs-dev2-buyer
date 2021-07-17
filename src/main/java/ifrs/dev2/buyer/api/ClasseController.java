@@ -18,6 +18,8 @@ import java.util.Collection;
 import java.util.Comparator;
 import java.util.List;
 
+import ifrs.dev2.buyer.segurancas.*;
+
 @RestController
 @RequestMapping(path="/api/classe")
 public class ClasseController  {
@@ -65,6 +67,8 @@ public class ClasseController  {
     {
         try
         {
+            Cripto.TestarSenha();
+
             List<Classe> retorno = null;
 
             if(nome.length() > 0)
