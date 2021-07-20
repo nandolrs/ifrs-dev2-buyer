@@ -1,55 +1,128 @@
 package ifrs.dev2.buyer.api;
 
-import ifrs.dev2.buyer.dados.Classe;
-import ifrs.dev2.buyer.dados.DadoInterface;
-import ifrs.dev2.buyer.dados.Produto;
 import ifrs.dev2.buyer.dados.Embalagem;
+import ifrs.dev2.buyer.erros.ErroBase;
+import ifrs.dev2.buyer.erros.ErroItem;
+import ifrs.dev2.buyer.respostas.EmbalagemResponse;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
-import javax.persistence.Id;
-import javax.print.attribute.standard.Media;
+import java.util.Comparator;
 import java.util.List;
 
 @RestController
-@RequestMapping(path="/api/Embalagem")
+@RequestMapping(path="/api/embalagem")
 public class EmbalagemController {
+
     long ID_NAO_ENCONTRADO = -1;
+
     @Autowired
     private ifrs.dev2.buyer.repositorios.EmbalagemRepository repositorio;
-    //insertt
+
     @PostMapping(
             value = "salvar"
             , consumes = {MediaType.APPLICATION_JSON_VALUE}
             , produces = {MediaType.APPLICATION_JSON_VALUE}
     )
+
     public @ResponseBody
-    Embalagem Salvar(@RequestBody Embalagem entidade) {
+    EmbalagemResponse Salvar(@RequestHeader HttpHeaders headers, @RequestBody Embalagem entidade) throws Exception {
 
-        repositorio.save(entidade);
+        try
+        {
+            repositorio.save(entidade);
 
-        return entidade;
+            return new EmbalagemResponse( entidade,null,null);
+        }
+
+        catch(Exception e)
+        {
+            String msg = "deu merda";
+
+            ErroItem item = new ErroItem("",msg,-1L);
+            //ErroBase erroBase = new ErroBase(e);
+            ErroBase erroBase = new ErroBase(item);
+
+            EmbalagemResponse retorno = new  EmbalagemResponse(null, erroBase, null) ;
+            return retorno;
+        }
     }
-    //responsive
+
     @GetMapping(
             value = "pesquisar"
             , produces = {MediaType.APPLICATION_JSON_VALUE}
     )
     public @ResponseBody
-    List<Embalagem> Pesquisar(@RequestParam String nome) {
+    EmbalagemResponse Pesquisar(@RequestHeader HttpHeaders headers,@RequestParam String nome)
+    {
+        try
+        {
+            List<Embalagem> retorno = null;
 
-        List<Embalagem> retorno = repositorio.findByNomeContaining(nome);
+            if(nome.length() > 0)
+            {
+                retorno = repositorio.findByNomeContaining(nome);
+            }
+            else
+            {
+                retorno = repositorio.findByNomeContaining(nome);
+            }
 
-        return retorno;
+            retorno.sort(Comparator.comparing(Embalagem::getNome ));
+
+            return new EmbalagemResponse( null,null,retorno);
+        }
+        catch(Exception e)
+        {
+            String msg = "deu merda";
+
+            ErroItem item = new ErroItem("",msg,-1L);
+            //ErroBase erroBase = new ErroBase(e);
+            ErroBase erroBase = new ErroBase(item);
+
+            EmbalagemResponse retorno = new  EmbalagemResponse(null, erroBase, null) ;
+            return retorno;
+        }
+    }
+
+    @GetMapping(
+            path="consultar/{id}"
+            , produces = {MediaType.APPLICATION_JSON_VALUE}
+    )
+    public @ResponseBody
+    EmbalagemResponse Consultar(@RequestHeader HttpHeaders headers, @PathVariable Long id) {
+
+        Embalagem retorno = new Embalagem();
+        try
+        {
+            retorno  = repositorio.findById(id).get();
+
+            return new EmbalagemResponse( retorno,null,null);
+        }
+
+        catch (Exception e)
+        {
+            retorno.setId(ID_NAO_ENCONTRADO);
+
+            String msg = "deu merda";
+
+            ErroItem item = new ErroItem("",msg,-1L);
+            //ErroBase erroBase = new ErroBase(e);
+            ErroBase erroBase = new ErroBase(item);
+
+            return  new  EmbalagemResponse(null, erroBase, null) ;
+
+        }
+
     }
 
     @GetMapping(
             path="excluir/{id}"
             ,produces = {MediaType.APPLICATION_JSON_VALUE}
     )
-    public @ResponseBody  Embalagem Excluir(@PathVariable Long   id) {
+    public @ResponseBody  Embalagem Excluir(@RequestHeader HttpHeaders headers, @PathVariable Long   id) {
 
         Embalagem retorno = new Embalagem();
         try
@@ -65,24 +138,40 @@ public class EmbalagemController {
 
         return retorno;
     }
+
+    void ErroLancar() throws Exception {
+        throw new Exception("deu merda");
+    }
+
     @GetMapping(
-            path="consultar/{id}"
+            value = "listar"
             , produces = {MediaType.APPLICATION_JSON_VALUE}
     )
     public @ResponseBody
-    Embalagem Consultar(@PathVariable Long id) {
-
-        Embalagem retorno = new Embalagem();
+    EmbalagemResponse Listar(@RequestHeader HttpHeaders headers)
+    {
         try
         {
-            retorno  = repositorio.findById(id).get();
-        }
+            String nome="";
+            List<Embalagem> retorno = retorno = repositorio.findByNomeContaining(nome);
 
-        catch (Exception e)
+            retorno.sort(Comparator.comparing(Embalagem::getNome ));
+
+            return new EmbalagemResponse( null,null,retorno);
+        }
+        catch(Exception e)
         {
-            retorno.setId(ID_NAO_ENCONTRADO);
-        }
+            String msg = "deu merda";
 
-        return retorno;
+            ErroItem item = new ErroItem("",msg,-1L);
+            //ErroBase erroBase = new ErroBase(e);
+            ErroBase erroBase = new ErroBase(item);
+
+            EmbalagemResponse retorno = new  EmbalagemResponse(null, erroBase, null) ;
+            return retorno;
+        }
     }
+
+
+
 }

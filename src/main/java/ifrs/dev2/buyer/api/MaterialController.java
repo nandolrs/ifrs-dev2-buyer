@@ -1,51 +1,44 @@
 package ifrs.dev2.buyer.api;
 
-import ifrs.dev2.buyer.dados.DadoInterface;
-import ifrs.dev2.buyer.dados.Classe;
+import ifrs.dev2.buyer.dados.Material;
+import ifrs.dev2.buyer.dados.Produto;
 import ifrs.dev2.buyer.erros.ErroBase;
 import ifrs.dev2.buyer.erros.ErroItem;
-import ifrs.dev2.buyer.respostas.ClasseResponse;
+import ifrs.dev2.buyer.respostas.MaterialResponse;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
-import javax.persistence.Id;
-import javax.print.attribute.standard.Media;
-import java.util.Collection;
 import java.util.Comparator;
 import java.util.List;
 
-import ifrs.dev2.buyer.segurancas.*;
-
 @RestController
-@RequestMapping(path="/api/classe")
-public class ClasseController  {
+@RequestMapping(path="/api/material")
+public class MaterialController {
 
     long ID_NAO_ENCONTRADO = -1;
 
     @Autowired
-    private ifrs.dev2.buyer.repositorios.ClasseRepository repositorio;
+    private ifrs.dev2.buyer.repositorios.MaterialRepository repositorio;
 
     @PostMapping(
             value = "salvar"
             , consumes = {MediaType.APPLICATION_JSON_VALUE}
             , produces = {MediaType.APPLICATION_JSON_VALUE}
-    )
+    ) // Map ONLY POST Requests
 
     public @ResponseBody
-    ifrs.dev2.buyer.respostas.ClasseResponse Salvar(@RequestHeader HttpHeaders headers, @RequestBody ifrs.dev2.buyer.dados.Classe entidade) throws Exception {
+    MaterialResponse Salvar(@RequestHeader HttpHeaders headers, @RequestBody Material entidade) throws Exception {
 
         try
         {
             repositorio.save(entidade);
 
-            return new ClasseResponse( entidade,null,null);
+            return new MaterialResponse( entidade,null,null);
         }
 
-        catch(Exception e)
+        catch (Exception e)
         {
             String msg = "deu merda";
 
@@ -53,7 +46,7 @@ public class ClasseController  {
             //ErroBase erroBase = new ErroBase(e);
             ErroBase erroBase = new ErroBase(item);
 
-            ClasseResponse retorno = new  ClasseResponse(null, erroBase, null) ;
+            MaterialResponse retorno = new  MaterialResponse(null, erroBase, null) ;
             return retorno;
         }
     }
@@ -63,26 +56,26 @@ public class ClasseController  {
             , produces = {MediaType.APPLICATION_JSON_VALUE}
     )
     public @ResponseBody
-    ClasseResponse Pesquisar(@RequestHeader HttpHeaders headers,@RequestParam String nome)
+    MaterialResponse Pesquisar(@RequestHeader HttpHeaders headers,@RequestParam Long produtoId) // @RequestHeader HttpHeaders headers,
     {
         try
         {
-            Cripto.TestarSenha();
+            List<Material> retorno = null;
 
-            List<Classe> retorno = null;
+            Produto produto = new Produto(); produto.setId(produtoId);
 
-            if(nome.length() > 0)
+            if(produto.getId() > 0)
             {
-                retorno = repositorio.findByNomeContaining(nome);
+                retorno = repositorio.findByProdutoId(produto.getId());
             }
             else
             {
-                retorno = repositorio.findByNomeContaining(nome);
+                retorno = repositorio.findByTudo();
             }
 
-            retorno.sort(Comparator.comparing(Classe::getNome ));
+            retorno.sort(Comparator.comparing(Material::getNome ));
 
-            return new ClasseResponse( null,null,retorno);
+            return new MaterialResponse( null,null,retorno);
         }
         catch(Exception e)
         {
@@ -92,7 +85,7 @@ public class ClasseController  {
             //ErroBase erroBase = new ErroBase(e);
             ErroBase erroBase = new ErroBase(item);
 
-            ClasseResponse retorno = new  ClasseResponse(null, erroBase, null) ;
+            MaterialResponse retorno = new  MaterialResponse(null, erroBase, null) ;
             return retorno;
         }
     }
@@ -102,14 +95,14 @@ public class ClasseController  {
             , produces = {MediaType.APPLICATION_JSON_VALUE}
     )
     public @ResponseBody
-    ClasseResponse Consultar(@RequestHeader HttpHeaders headers, @PathVariable Long id) {
+    MaterialResponse Consultar(@RequestHeader HttpHeaders headers, @PathVariable Long id) {
 
-        Classe retorno = new Classe();
+        Material retorno = new Material();
         try
         {
             retorno  = repositorio.findById(id).get();
 
-            return new ClasseResponse( retorno,null,null);
+            return new MaterialResponse( retorno,null,null);
         }
 
         catch (Exception e)
@@ -122,7 +115,7 @@ public class ClasseController  {
             //ErroBase erroBase = new ErroBase(e);
             ErroBase erroBase = new ErroBase(item);
 
-            return  new  ClasseResponse(null, erroBase, null) ;
+            return  new  MaterialResponse(null, erroBase, null) ;
 
         }
 
@@ -132,9 +125,9 @@ public class ClasseController  {
             path="excluir/{id}"
             ,produces = {MediaType.APPLICATION_JSON_VALUE}
     )
-    public @ResponseBody  Classe Excluir(@RequestHeader HttpHeaders headers, @PathVariable Long   id) {
+    public @ResponseBody  Material Excluir(@RequestHeader HttpHeaders headers, @PathVariable Long   id) {
 
-        Classe retorno = new Classe();
+        Material retorno = new Material();
         try
         {
             retorno  = repositorio.findById(id).get();
@@ -153,21 +146,25 @@ public class ClasseController  {
         throw new Exception("deu merda");
     }
 
+
     @GetMapping(
             value = "listar"
             , produces = {MediaType.APPLICATION_JSON_VALUE}
     )
     public @ResponseBody
-    ClasseResponse Listar(@RequestHeader HttpHeaders headers)
+    MaterialResponse Listar(@RequestHeader HttpHeaders headers)
     {
         try
         {
-            String nome="";
-            List<Classe> retorno = retorno = repositorio.findByNomeContaining(nome);
+            List<Material> retorno = null;
 
-            retorno.sort(Comparator.comparing(Classe::getNome ));
+            Produto produto = new Produto();
 
-            return new ClasseResponse( null,null,retorno);
+            retorno = repositorio.findByProdutoContaining(produto);
+
+            retorno.sort(Comparator.comparing(Material::getNome ));
+
+            return new MaterialResponse( null,null,retorno);
         }
         catch(Exception e)
         {
@@ -177,11 +174,10 @@ public class ClasseController  {
             //ErroBase erroBase = new ErroBase(e);
             ErroBase erroBase = new ErroBase(item);
 
-            ClasseResponse retorno = new  ClasseResponse(null, erroBase, null) ;
+            MaterialResponse retorno = new  MaterialResponse(null, erroBase, null) ;
             return retorno;
         }
     }
-
 
 
 }

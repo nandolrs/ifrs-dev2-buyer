@@ -5,6 +5,7 @@ import ifrs.dev2.buyer.dados.DadoInterface;
 import ifrs.dev2.buyer.dados.Produto;
 import ifrs.dev2.buyer.erros.ErroBase;
 import ifrs.dev2.buyer.erros.ErroItem;
+import ifrs.dev2.buyer.respostas.ClasseResponse;
 import ifrs.dev2.buyer.respostas.ProdutoResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
@@ -153,5 +154,36 @@ public class ProdutoController  {
     void ErroLancar() throws Exception {
         throw new Exception("deu merda");
     }
+
+
+    @GetMapping(
+            value = "listar"
+            , produces = {MediaType.APPLICATION_JSON_VALUE}
+    )
+    public @ResponseBody
+    ProdutoResponse Listar(@RequestHeader HttpHeaders headers)
+    {
+        try
+        {
+            String nome="";
+            List<Produto> retorno = retorno = repositorio.findByNomeContaining(nome);
+
+            retorno.sort(Comparator.comparing(Produto::getNome ));
+
+            return new ProdutoResponse( null,null,retorno);
+        }
+        catch(Exception e)
+        {
+            String msg = "deu merda";
+
+            ErroItem item = new ErroItem("",msg,-1L);
+            //ErroBase erroBase = new ErroBase(e);
+            ErroBase erroBase = new ErroBase(item);
+
+            ProdutoResponse retorno = new  ProdutoResponse(null, erroBase, null) ;
+            return retorno;
+        }
+    }
+
 
 }

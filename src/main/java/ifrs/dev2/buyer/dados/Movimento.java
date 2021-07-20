@@ -5,81 +5,72 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Entity;
 
-@Entity
+
+import javax.persistence.*;
+import java.util.Date;
+
+@Entity // This tells Hibernate to make a table out of this class
 public class Movimento {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy= GenerationType.AUTO)
     Long id;
 
-    String data;
 
-    float quantidade;
-
-    float valor_unitario;
-
-    float valor_total;
-
-    Long estabelecimento_id;
+    Date dataMovimento;
+    Float quantidade;
+    Float valorUnitario;
+    Float valorTotal;
+    private Long tipo; // 0 nao usar, 1=entrada, 2=saida, 3=compra,  4=cotacao
 
 
+    @OneToOne
+    private Estabelecimento estabelecimento;
+
+
+    @OneToOne
+    private Material material;
 
     // id
 
-    public Long getId() {
+    public Long getId()
+    {
         return this.id;
     }
-
-    public void setId(Long valor) {
-        this.id = valor;
+    public void setId(Long valor)
+    {
+        this.id=valor;
     }
 
-    // data
 
-    public String getData() { return this.data; }
+    // estabelecimento
 
-    public void setData(String valor) {
-        this.data = valor;
+    public Estabelecimento getEstabelecimento() {
+        return this.estabelecimento;
     }
 
-    // quantidade
-
-    public float getQuantidade() {
-        return this.quantidade;
+    public void setClasse(Estabelecimento estabelecimento) {
+        this.estabelecimento = estabelecimento;
     }
 
-    public void setQuantidade(float valor) {
-        this.quantidade = valor;
+    // tipo
+
+    public Long getTipo() {
+        return tipo;
     }
 
-    // valor_unitario
-
-    public float getValor_unitario() {
-        return this.valor_unitario;
+    public void setTipo(Long tipo) {
+        this.tipo = tipo;
     }
 
-    public void setValor_unitario(float valor) {
-        this.valor_unitario = valor;
+    // material
+
+    public Material getMaterial() {
+        return material;
     }
 
-    // valor_total
-
-    public float getValor_total() {
-        return this.valor_total;
-    }
-
-    public void setValor_total(float valor) {
-        this.valor_total = valor;
-    }
-
-    //estabelecimento_id
-
-    public Long getEstabelecimento_id() {
-        return this.estabelecimento_id;
-    }
-
-    public void setEstabelecimento_id(Long valor) {
-        this.estabelecimento_id = valor;
+    public void setMaterial(Material material) {
+        this.material = material;
     }
 }
 

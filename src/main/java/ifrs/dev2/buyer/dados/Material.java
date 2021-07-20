@@ -3,7 +3,7 @@ package ifrs.dev2.buyer.dados;
 import javax.persistence.*;
 
 @Entity // This tells Hibernate to make a table out of this class
-public class Produto {
+public class Material {
 
     @Id
     @GeneratedValue(strategy= GenerationType.AUTO)
@@ -12,7 +12,12 @@ public class Produto {
     String nome;
 
     @OneToOne
-    private Classe classe;
+    private
+    Produto produto;
+
+    @OneToOne
+    private
+    Embalagem embalagem;
 
     // id
 
@@ -33,13 +38,22 @@ public class Produto {
         this.nome=valor;
     }
 
-    // classe
+    // produto
 
-    public Classe getClasse() {
-        return classe;
+    public Produto getProduto() {
+        return produto;
     }
 
-    public void setClasse(Classe classe) {
-        this.classe = classe;
+    public void setProduto(Produto produto) {
+        this.produto = produto;
+    }
+
+    // embalagem
+    public Embalagem getEmbalagem() {
+        return embalagem;
+    }
+
+    public void setEmbalagem(Embalagem embalagem) {
+        this.embalagem = embalagem;
     }
 }

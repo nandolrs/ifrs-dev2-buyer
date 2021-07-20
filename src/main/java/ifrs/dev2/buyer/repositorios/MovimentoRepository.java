@@ -1,7 +1,7 @@
 package ifrs.dev2.buyer.repositorios;
 
-import ifrs.dev2.buyer.dados.Movimento;
 import org.springframework.data.repository.CrudRepository;
+import ifrs.dev2.buyer.dados.Movimento;
 
 import java.util.List;
 
