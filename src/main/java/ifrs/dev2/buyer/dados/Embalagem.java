@@ -1,9 +1,6 @@
 package ifrs.dev2.buyer.dados;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import javax.persistence.*;
 
 @Entity
 public class Embalagem {
@@ -14,6 +11,9 @@ public class Embalagem {
 
         String nome;
         double capacidade;
+
+    @OneToOne//@MapsId
+    private UnidadeMedida unidademedida;
 
         // id
 
@@ -41,12 +41,15 @@ public class Embalagem {
         return this.capacidade;
         }
 
-        public void setCapacidade(double valor) {
-            this.capacidade = valor;
-        }
+
+        //unidademedida
+
+    public UnidadeMedida getUnidadeMedida() { return unidademedida;}
 
 
+    public void setUnidadeMedida(UnidadeMedida unidademedida) {
+        this.unidademedida = unidademedida;
+    }
 
 
     }
-
