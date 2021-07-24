@@ -12,12 +12,6 @@ public class Embalagem {
     String nome;
 
     private Float capacidade;
-    @OneToOne//@MapsId
-    private UnidadeMedida unidademedida;
-
-        // id
-
-
 
     @OneToOne
     private UnidadeMedida unidadeMedida;
@@ -53,15 +47,12 @@ public class Embalagem {
         this.capacidade = capacidade;
     }
 
-
     // unidade de medida
 
+    public UnidadeMedida getUnidadeMedida() { return unidadeMedida;}
 
-
-    public UnidadeMedida getUnidadeMedida() { return unidademedida;}
-
-    public void setUnidadeMedida(UnidadeMedida unidademedida) {
-        this.unidademedida = unidademedida;
+    public void setUnidadeMedida(UnidadeMedida unidadeMedida) {
+        this.unidadeMedida = unidadeMedida;
     }
 
 

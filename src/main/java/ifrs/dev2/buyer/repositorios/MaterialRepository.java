@@ -11,7 +11,7 @@ import java.util.List;
 public interface MaterialRepository extends CrudRepository<Material, Long> {
     List<Material> findByProdutoContaining(Produto produto);
 
-    @Query("select m from Material m where m.id = :produtoId")
+    @Query("select m from Material m where m.produto.id = :produtoId")
     List<Material> findByProdutoId(@Param("produtoId") Long produtoId);
 
 
