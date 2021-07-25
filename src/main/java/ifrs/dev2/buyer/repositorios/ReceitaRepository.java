@@ -27,13 +27,13 @@ public interface ReceitaRepository extends CrudRepository<Receita, Long> {
     @Query(value = "select \n" +
             "r.*\n" +
             "from dbbuyer.receita r\n" +
-            "where r.id <> 0 -- 998\n" +
+            "where r.id <> 0 \n" +
             "and exists\n" +
             "(\n" +
             "\tselect 1 \n" +
             "    from dbbuyer.receita_material rm\n" +
             "    where rm.receita_id=r.id\n" +
-            "\tand rm.material_id = 49 -- laranja\n" +
+            "\tand rm.material_id = :materialId \n" +
             ");\n"
             , nativeQuery = true)
     List<Receita> findByMaterialId(@Param("materialId") Long materialId);
