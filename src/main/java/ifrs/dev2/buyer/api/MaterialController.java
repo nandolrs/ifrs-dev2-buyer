@@ -160,9 +160,11 @@ public class MaterialController {
 
             Produto produto = new Produto();
 
-            retorno = repositorio.findByProdutoContaining(produto);
+            //retorno = repositorio.findByProdutoContaining(produto);
 
-            retorno.sort(Comparator.comparing(Material::getNome ));
+            retorno = repositorio.findByTudo();
+
+            //retorno.sort(Comparator.comparing(Material::getNome ));
 
             return new MaterialResponse( null,null,retorno);
         }

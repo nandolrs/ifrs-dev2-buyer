@@ -5,12 +5,14 @@ import ifrs.dev2.buyer.erros.ErroBase;
 import ifrs.dev2.buyer.erros.ErroItem;
 import ifrs.dev2.buyer.respostas.ReceitaResponse;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Comparator;
 import java.util.List;
+import javax.persistence.EntityManager;
 
 @RestController
 @RequestMapping(path = "/api/receita")
@@ -47,7 +49,6 @@ public class ReceitaController {
     }
 
 
-    //@CrossOrigin() // origins = "http://localhost:3000"
     @GetMapping(
             value = "pesquisar"
             , produces = {MediaType.APPLICATION_JSON_VALUE}
@@ -153,4 +154,51 @@ public class ReceitaController {
             return retorno;
         }
     }
+
+    @GetMapping(
+            value = "pesquisarPorProdutoXMaterial"
+            , produces = {MediaType.APPLICATION_JSON_VALUE}
+    )
+    public @ResponseBody
+    ReceitaResponse PesquisarPorProdutoMaterial(@RequestHeader HttpHeaders headers, @RequestParam Long produtoId, @RequestParam Long materialId) // @RequestHeader HttpHeaders headers,
+    {
+        try {
+            List<Receita> retorno = null;
+
+            if (produtoId != 0)
+            {
+                retorno = repositorio.findByProdutoId(produtoId);
+            } else if (materialId != 0) {
+                retorno = repositorio.findByMaterialId(materialId);
+            }
+            else
+            {
+                retorno = repositorio.findTudo();
+            }
+
+          //  retorno.sort(Comparator.comparing(Receita::getNome));
+
+            return new ReceitaResponse(null, null, retorno);
+        } catch (Exception e) {
+            String msg = "deu merda";
+
+            ErroItem item = new ErroItem("", msg, -1L);
+            //ErroBase erroBase = new ErroBase(e);
+            ErroBase erroBase = new ErroBase(item);
+
+            ReceitaResponse retorno = new ReceitaResponse(null, erroBase, null);
+            return retorno;
+        }
+    }
+
+    List<Receita> BuscaPorMaterial(Long materialId)
+    {
+        //Query  q = Session.createNamedQuery("ReceitaPorMaterial", ifrs.dev2.buyer.dados.Receita.class);
+        //q.setParameter("materialId",materialId);
+        //List<ifrs.dev2.buyer.dados.Receita> retorno = q.getResultList();;
+
+        return  repositorio.findByMaterialId(materialId);
+
+    }
+
 }

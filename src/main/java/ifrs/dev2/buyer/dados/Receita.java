@@ -5,6 +5,7 @@ import antlr.collections.List;
 import javax.persistence.*;
 import java.util.Set;
 
+
 @Entity
 public class Receita {
 
@@ -18,8 +19,8 @@ public class Receita {
     @OneToOne
     private Produto produto;
 
-    @OneToMany
-    private Set<Material> materiais;
+    //@OneToMany
+    //private Set<Material> materiais;
 
     public Long getId() {
         return id;
@@ -45,6 +46,7 @@ public class Receita {
         this.produto = produto;
     }
 
+    /*
     public List getMateriais() {
         return (List) materiais;
     }
@@ -52,4 +54,6 @@ public class Receita {
     public void setMateriais(List materiais) {
         this.materiais = (Set<Material>) materiais;
     }
+
+     */
 }

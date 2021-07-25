@@ -3,6 +3,8 @@ package ifrs.dev2.buyer.dados;
 import javax.persistence.*;
 
 @Entity // This tells Hibernate to make a table out of this class
+
+
 public class Material {
 
     @Id
