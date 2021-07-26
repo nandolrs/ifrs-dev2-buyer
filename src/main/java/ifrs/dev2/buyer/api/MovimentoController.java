@@ -13,7 +13,7 @@ import java.util.List;
 
 
     @RestController
-    @RequestMapping(path="/api/Movimento")
+    @RequestMapping(path="/api/movimento")
     public class MovimentoController {
 
         long ID_NAO_ENCONTRADO = -1;
