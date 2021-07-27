@@ -1,12 +1,18 @@
 package ifrs.dev2.buyer.api;
 
+import ifrs.dev2.buyer.dados.Produto;
 import ifrs.dev2.buyer.dados.UnidadeMedida;
 import ifrs.dev2.buyer.dados.Usuario;
 
+import ifrs.dev2.buyer.erros.ErroBase;
+import ifrs.dev2.buyer.erros.ErroItem;
+import ifrs.dev2.buyer.respostas.UsuarioResponse;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Comparator;
 import java.util.List;
 
 
@@ -22,20 +28,37 @@ public class UsuarioController  {
     private ifrs.dev2.buyer.repositorios.UsuarioRepository repositorio;
 
     @PostMapping(
-        value = "salvar"
-        , consumes = {MediaType.APPLICATION_JSON_VALUE}
-        , produces = {MediaType.APPLICATION_JSON_VALUE}
+            value = "salvar"
+            , consumes = {MediaType.APPLICATION_JSON_VALUE}
+            , produces = {MediaType.APPLICATION_JSON_VALUE}
     ) // Map ONLY POST Requests
     
     public @ResponseBody
-    Usuario Salvar (@RequestBody Usuario entidade) {
-        // @ResponseBody means the returned String is the response, not a view name
-        // @RequestParam means it is a parameter from the GET or POST request
 
-       repositorio.save(entidade);
+       ifrs.dev2.buyer.respostas.UsuarioResponse Salvar (@RequestHeader HttpHeaders headers, @RequestBody ifrs.dev2.buyer.dados.Usuario entidade) throws Exception {
+            // @ResponseBody means the returned String is the response, not a view name
+            // @RequestParam means it is a parameter from the GET or POST request
 
-       return entidade;
+        try
+        {
+            repositorio.save(entidade);
+
+            return new UsuarioResponse( entidade,null,null);
+        }
+
+        catch (Exception e)
+        {
+            String msg = "ERROOU!";
+
+            ErroItem item = new ErroItem("",msg,-1L);
+            //ErroBase erroBase = new ErroBase(e);
+            ErroBase erroBase = new ErroBase(item);
+
+            UsuarioResponse retorno = new UsuarioResponse(null, erroBase, null) ;
+            return retorno;
+        }
     }
+
 
     //responsive
     @GetMapping(
@@ -44,11 +67,35 @@ public class UsuarioController  {
     )
     public @ResponseBody
 
-        List<Usuario> Pesquisar(@RequestParam String nome) {
+        UsuarioResponse Pesquisar(@RequestHeader HttpHeaders headers,@RequestParam String nome) {
+        try
+        {
+            List<Usuario> retorno = null;
 
-            List<Usuario> retorno = repositorio.findByNomeContaining(nome);
+            if(nome.length() > 0)
+            {
+                retorno = repositorio.findByNomeContaining(nome);
+            }
+            else
+            {
+                retorno = repositorio.findByNomeContaining(nome);
+            }
 
-        return retorno;
+            retorno.sort(Comparator.comparing(Usuario::getName ));
+
+            return new UsuarioResponse( null,null,retorno);
+        }
+        catch(Exception e)
+        {
+            String msg = "ERROOU!";
+
+            ErroItem item = new ErroItem("",msg,-1L);
+            //ErroBase erroBase = new ErroBase(e);
+            ErroBase erroBase = new ErroBase(item);
+
+            UsuarioResponse retorno = new UsuarioResponse(null, erroBase, null) ;
+            return retorno;
+        }
     }
 
     @GetMapping(

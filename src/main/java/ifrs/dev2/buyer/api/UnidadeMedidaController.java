@@ -4,7 +4,11 @@ import ifrs.dev2.buyer.dados.Classe;
 import ifrs.dev2.buyer.dados.DadoInterface;
 import ifrs.dev2.buyer.dados.Produto;
 import ifrs.dev2.buyer.dados.UnidadeMedida;
+import ifrs.dev2.buyer.erros.ErroBase;
+import ifrs.dev2.buyer.erros.ErroItem;
+import ifrs.dev2.buyer.respostas.UnidadeMedidaResponse;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
@@ -40,11 +44,28 @@ public class UnidadeMedidaController  {
             , produces = {MediaType.APPLICATION_JSON_VALUE}
     )
     public @ResponseBody
-    List<UnidadeMedida> Pesquisar(@RequestParam String nome) {
+    UnidadeMedidaResponse Pesquisar(@RequestHeader HttpHeaders headers, @RequestParam String nome) {
 
-        List<UnidadeMedida> retorno = repositorio.findByNomeContaining(nome);
+        try
+        {
+            List<UnidadeMedida> retorno = repositorio.findByNomeContaining(nome);
 
-        return retorno;
+//            return retorno;
+            return new UnidadeMedidaResponse( null,null,retorno);
+
+        }
+
+        catch(Exception e)
+        {
+            String msg = "deu merda";
+
+            ErroItem item = new ErroItem("",msg,-1L);
+            //ErroBase erroBase = new ErroBase(e);
+            ErroBase erroBase = new ErroBase(item);
+
+            UnidadeMedidaResponse retorno = new UnidadeMedidaResponse(null, erroBase, null) ;
+            return retorno;
+        }
     }
 
     @GetMapping(
