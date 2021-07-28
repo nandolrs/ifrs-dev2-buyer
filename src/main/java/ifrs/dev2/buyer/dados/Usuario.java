@@ -10,11 +10,11 @@ public class Usuario {
     
     Long id;
 
-    String nome;
+    private String nome;
 
-    String email;
+    private String email;
 
-    String senha;
+    private String senha;
 
     // id
 
@@ -27,16 +27,7 @@ public class Usuario {
         this.id=valor;
     }
 
-    // nome
 
-    public String getName()
-    {
-        return this.nome;
-    }
-    public void setName(String valor)
-    {
-        this.nome=valor;
-    }
 
     // email
 
@@ -47,9 +38,25 @@ public class Usuario {
     }
 
 
+    // nome
+
+    public String getNome() {
+        return nome;
+    }
+
+    public void setNome(String nome) {
+        this.nome = nome;
+    }
+
     // senha
 
-    public String getPassword()    { return this.senha; }
-    public void setPassword(String valor)    { this.senha=valor; }
+    public String getSenha() {
+        return senha;
+    }
+
+    public void setSenha(String senha) {
+        this.senha = senha;
+    }
+
 
 }

@@ -151,11 +151,6 @@ public class ProdutoController  {
         return retorno;
     }
 
-    void ErroLancar() throws Exception {
-        throw new Exception("deu merda");
-    }
-
-
     @GetMapping(
             value = "listar"
             , produces = {MediaType.APPLICATION_JSON_VALUE}
@@ -184,6 +179,11 @@ public class ProdutoController  {
             return retorno;
         }
     }
+
+    void ErroLancar() throws Exception {
+        throw new Exception("deu merda");
+    }
+
 
 
 }
