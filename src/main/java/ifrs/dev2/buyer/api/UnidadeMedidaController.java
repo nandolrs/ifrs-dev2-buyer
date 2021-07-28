@@ -1,11 +1,9 @@
 package ifrs.dev2.buyer.api;
 
-import ifrs.dev2.buyer.dados.Classe;
-import ifrs.dev2.buyer.dados.DadoInterface;
-import ifrs.dev2.buyer.dados.Produto;
-import ifrs.dev2.buyer.dados.UnidadeMedida;
+import ifrs.dev2.buyer.dados.*;
 import ifrs.dev2.buyer.erros.ErroBase;
 import ifrs.dev2.buyer.erros.ErroItem;
+import ifrs.dev2.buyer.respostas.EmbalagemResponse;
 import ifrs.dev2.buyer.respostas.UnidadeMedidaResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
@@ -93,19 +91,30 @@ public class UnidadeMedidaController  {
             , produces = {MediaType.APPLICATION_JSON_VALUE}
     )
     public @ResponseBody
-    UnidadeMedida Consultar(@PathVariable Long id) {
+    UnidadeMedidaResponse Consultar(@RequestHeader HttpHeaders headers, @PathVariable Long id) {
 
         UnidadeMedida retorno = new UnidadeMedida();
         try
         {
             retorno  = repositorio.findById(id).get();
+
+            return new UnidadeMedidaResponse( retorno,null,null);
         }
 
         catch (Exception e)
         {
             retorno.setId(ID_NAO_ENCONTRADO);
+
+            String msg = "deu merda";
+
+            ErroItem item = new ErroItem("",msg,-1L);
+            //ErroBase erroBase = new ErroBase(e);
+            ErroBase erroBase = new ErroBase(item);
+
+            return  new  UnidadeMedidaResponse(null, erroBase, null) ;
+
         }
 
-        return retorno;
-}
+    }
+
 }
