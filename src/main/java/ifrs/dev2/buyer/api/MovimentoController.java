@@ -1,13 +1,19 @@
 package ifrs.dev2.buyer.api;
 
 import ifrs.dev2.buyer.dados.*;
+import ifrs.dev2.buyer.erros.ErroBase;
+import ifrs.dev2.buyer.erros.ErroItem;
+import ifrs.dev2.buyer.respostas.EmbalagemResponse;
+import ifrs.dev2.buyer.respostas.MovimentoResponse;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 import javax.persistence.Id;
 import javax.print.attribute.standard.Media;
+import java.util.Comparator;
 import java.util.List;
 
 
@@ -38,12 +44,36 @@ import java.util.List;
                 value = "pesquisar"
                 , produces = {MediaType.APPLICATION_JSON_VALUE}
         )
-        public @ResponseBody
-        List<Movimento> Pesquisar(@RequestParam Long id) {
+        MovimentoResponse Pesquisar(@RequestHeader HttpHeaders headers, @RequestParam Long materialId)
+        {
+            try
+            {
+                List<Movimento> retorno = null;
 
-            List<Movimento> retorno = repositorio.findByIdContaining(id);
+                if(materialId > 0)
+                {
+                    retorno = repositorio.findByMaterialId(materialId);
+                }
+                else
+                {
+                    retorno = repositorio.findByTudo();
+                }
 
-            return retorno;
+                //retorno.sort(Comparator.comparing(Movimento::getTipo ));
+
+                return new MovimentoResponse( null,null,retorno);
+            }
+            catch(Exception e)
+            {
+                String msg = "deu merda";
+
+                ErroItem item = new ErroItem("",msg,-1L);
+                //ErroBase erroBase = new ErroBase(e);
+                ErroBase erroBase = new ErroBase(item);
+
+                MovimentoResponse retorno = new  MovimentoResponse(null, erroBase, null) ;
+                return retorno;
+            }
         }
         @GetMapping(
                 path="excluir/{id}"
@@ -70,19 +100,23 @@ import java.util.List;
                 , produces = {MediaType.APPLICATION_JSON_VALUE}
         )
         public @ResponseBody
-        Movimento Consultar(@PathVariable Long id) {
+        MovimentoResponse Consultar(@RequestHeader HttpHeaders headers, @PathVariable Long id) {
 
             Movimento retorno = new Movimento();
-            try
-            {
-                retorno  = repositorio.findById(id).get();
-            }
+            try {
+                retorno = repositorio.findById(id).get();
 
-            catch (Exception e)
-            {
+                return new MovimentoResponse(retorno, null, null);
+            } catch (Exception e) {
                 retorno.setId(ID_NAO_ENCONTRADO);
-            }
 
-            return retorno;
-        }
-}
+                String msg = "deu merda";
+
+                ErroItem item = new ErroItem("", msg, -1L);
+                //ErroBase erroBase = new ErroBase(e);
+                ErroBase erroBase = new ErroBase(item);
+
+                return new MovimentoResponse(null, erroBase, null);
+
+            }
+        }}

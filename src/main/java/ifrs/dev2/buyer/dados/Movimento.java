@@ -16,7 +16,7 @@ public class Movimento {
     @GeneratedValue(strategy= GenerationType.AUTO)
     Long id;
 
-
+    String nome;
     Date dataMovimento;
     Float quantidade;
     Float valorUnitario;
@@ -72,5 +72,66 @@ public class Movimento {
     public void setMaterial(Material material) {
         this.material = material;
     }
-}
 
+    //quantidade
+
+    public float getQuantidade() {
+        return quantidade;
+    }
+
+    public void setQuantidade(float quantidade) {
+        this.quantidade = quantidade;
+    }
+//nome
+
+    public String getNome() { return nome; }
+
+    public void setNome(String nome) {
+        this.nome = nome;
+    }
+
+//data movimento
+    public Date getDataMovimento() {
+        return dataMovimento;
+    }
+
+    public void setDataMovimento(Date dataMovimento) {
+        this.dataMovimento = dataMovimento;
+    }
+
+//valor unitario
+
+    public float getValorUnitario() {
+        return valorUnitario;
+    }
+
+    public void setValorUnitario(float valorUnitario) {
+        this.valorUnitario = valorUnitario;
+    }
+
+
+
+    //valor total
+
+    public float getValorTotal() {
+        return valorTotal;
+    }
+
+    public void setValorTotal(float valorTotal) {
+        this.valorTotal = valorTotal;
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+}
