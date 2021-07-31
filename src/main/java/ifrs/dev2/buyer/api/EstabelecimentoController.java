@@ -1,33 +1,26 @@
 package ifrs.dev2.buyer.api;
 
-import ifrs.dev2.buyer.dados.DadoInterface;
-import ifrs.dev2.buyer.dados.Classe;
+import ifrs.dev2.buyer.dados.Estabelecimento;
 import ifrs.dev2.buyer.erros.ErroBase;
 import ifrs.dev2.buyer.erros.ErroItem;
-import ifrs.dev2.buyer.respostas.ClasseResponse;
+import ifrs.dev2.buyer.respostas.EstabelecimentoResponse;
+import ifrs.dev2.buyer.segurancas.Cripto;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
-import javax.persistence.Id;
-import javax.print.attribute.standard.Media;
-import java.util.Collection;
 import java.util.Comparator;
 import java.util.List;
 
-import ifrs.dev2.buyer.segurancas.*;
-
 @RestController
-@RequestMapping(path="/api/classe")
-public class ClasseController  {
+@RequestMapping(path="/api/estabelecimento")
+public class EstabelecimentoController {
 
     long ID_NAO_ENCONTRADO = -1;
 
     @Autowired
-    private ifrs.dev2.buyer.repositorios.ClasseRepository repositorio;
+    private ifrs.dev2.buyer.repositorios.EstabelecimentoRepository repositorio;
 
     @PostMapping(
             value = "salvar"
@@ -36,13 +29,13 @@ public class ClasseController  {
     )
 
     public @ResponseBody
-    ifrs.dev2.buyer.respostas.ClasseResponse Salvar(@RequestHeader HttpHeaders headers, @RequestBody ifrs.dev2.buyer.dados.Classe entidade) throws Exception {
+    EstabelecimentoResponse Salvar(@RequestHeader HttpHeaders headers, @RequestBody Estabelecimento entidade) throws Exception {
 
         try
         {
-            repositorio.save(entidade);
+            entidade = repositorio.save(entidade);
 
-            return new ClasseResponse( entidade,null,null);
+            return new EstabelecimentoResponse( entidade,null,null);
         }
 
         catch(Exception e)
@@ -53,7 +46,7 @@ public class ClasseController  {
             //ErroBase erroBase = new ErroBase(e);
             ErroBase erroBase = new ErroBase(item);
 
-            ClasseResponse retorno = new  ClasseResponse(null, erroBase, null) ;
+            EstabelecimentoResponse retorno = new  EstabelecimentoResponse(null, erroBase, null) ;
             return retorno;
         }
     }
@@ -63,25 +56,25 @@ public class ClasseController  {
             , produces = {MediaType.APPLICATION_JSON_VALUE}
     )
     public @ResponseBody
-    ClasseResponse Pesquisar(@RequestHeader HttpHeaders headers,@RequestParam String nome)
+    EstabelecimentoResponse Pesquisar(@RequestHeader HttpHeaders headers,@RequestParam String nomeFantasia)
     {
         try
         {
 
-            List<Classe> retorno = null;
+            List<Estabelecimento> retorno = null;
 
-            if(nome.length() > 0)
+            if(nomeFantasia.length() > 0)
             {
-                retorno = repositorio.findByNomeContaining(nome);
+                retorno = repositorio.findByNomeFantasiaContaining(nomeFantasia);
             }
             else
             {
-                retorno = repositorio.findByNomeContaining(nome);
+                retorno = repositorio.findByTudo();
             }
 
-            retorno.sort(Comparator.comparing(Classe::getNome ));
+            retorno.sort(Comparator.comparing(Estabelecimento::getNomeFantasia ));
 
-            return new ClasseResponse( null,null,retorno);
+            return new EstabelecimentoResponse( null,null,retorno);
         }
         catch(Exception e)
         {
@@ -91,7 +84,7 @@ public class ClasseController  {
             //ErroBase erroBase = new ErroBase(e);
             ErroBase erroBase = new ErroBase(item);
 
-            ClasseResponse retorno = new  ClasseResponse(null, erroBase, null) ;
+            EstabelecimentoResponse retorno = new  EstabelecimentoResponse(null, erroBase, null) ;
             return retorno;
         }
     }
@@ -101,14 +94,14 @@ public class ClasseController  {
             , produces = {MediaType.APPLICATION_JSON_VALUE}
     )
     public @ResponseBody
-    ClasseResponse Consultar(@RequestHeader HttpHeaders headers, @PathVariable Long id) {
+    EstabelecimentoResponse Consultar(@RequestHeader HttpHeaders headers, @PathVariable Long id) {
 
-        Classe retorno = new Classe();
+        Estabelecimento retorno = new Estabelecimento();
         try
         {
             retorno  = repositorio.findById(id).get();
 
-            return new ClasseResponse( retorno,null,null);
+            return new EstabelecimentoResponse( retorno,null,null);
         }
 
         catch (Exception e)
@@ -121,7 +114,7 @@ public class ClasseController  {
             //ErroBase erroBase = new ErroBase(e);
             ErroBase erroBase = new ErroBase(item);
 
-            return  new  ClasseResponse(null, erroBase, null) ;
+            return  new  EstabelecimentoResponse(null, erroBase, null) ;
 
         }
 
@@ -131,9 +124,9 @@ public class ClasseController  {
             path="excluir/{id}"
             ,produces = {MediaType.APPLICATION_JSON_VALUE}
     )
-    public @ResponseBody  Classe Excluir(@RequestHeader HttpHeaders headers, @PathVariable Long   id) {
+    public @ResponseBody  Estabelecimento Excluir(@RequestHeader HttpHeaders headers, @PathVariable Long   id) {
 
-        Classe retorno = new Classe();
+        Estabelecimento retorno = new Estabelecimento();
         try
         {
             retorno  = repositorio.findById(id).get();
@@ -157,16 +150,15 @@ public class ClasseController  {
             , produces = {MediaType.APPLICATION_JSON_VALUE}
     )
     public @ResponseBody
-    ClasseResponse Listar(@RequestHeader HttpHeaders headers)
+    EstabelecimentoResponse Listar(@RequestHeader HttpHeaders headers)
     {
         try
         {
-            String nome="";
-            List<Classe> retorno = retorno = repositorio.findByNomeContaining(nome);
+            List<Estabelecimento> retorno = retorno = repositorio.findByTudo();
 
-            retorno.sort(Comparator.comparing(Classe::getNome ));
+            retorno.sort(Comparator.comparing(Estabelecimento::getNomeFantasia ));
 
-            return new ClasseResponse( null,null,retorno);
+            return new EstabelecimentoResponse( null,null,retorno);
         }
         catch(Exception e)
         {
@@ -176,7 +168,7 @@ public class ClasseController  {
             //ErroBase erroBase = new ErroBase(e);
             ErroBase erroBase = new ErroBase(item);
 
-            ClasseResponse retorno = new  ClasseResponse(null, erroBase, null) ;
+            EstabelecimentoResponse retorno = new  EstabelecimentoResponse(null, erroBase, null) ;
             return retorno;
         }
     }

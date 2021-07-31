@@ -13,6 +13,8 @@ public class Estabelecimento {
     Long id;
 
     String nomeFantasia;
+    private float latitude;
+    private float longitude;
 
     // id
 
@@ -25,11 +27,30 @@ public class Estabelecimento {
         this.id=valor;
     }
 
-    // name
+    // nome fantasia
 
     public String getNomeFantasia(){return this.nomeFantasia;}
     public void setNomeFantasia(String valor)
     {
         this.nomeFantasia=valor;
+    }
+    // latitude
+
+    public float getLatitude() {
+        return latitude;
+    }
+
+    public void setLatitude(float latitude) {
+        this.latitude = latitude;
+    }
+
+    // longitude
+
+    public float getLongitude() {
+        return longitude;
+    }
+
+    public void setLongitude(float longitude) {
+        this.longitude = longitude;
     }
 }
