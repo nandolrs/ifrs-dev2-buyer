@@ -3,7 +3,6 @@ package ifrs.dev2.buyer.api;
 import ifrs.dev2.buyer.dados.*;
 import ifrs.dev2.buyer.erros.ErroBase;
 import ifrs.dev2.buyer.erros.ErroItem;
-import ifrs.dev2.buyer.respostas.EmbalagemResponse;
 import ifrs.dev2.buyer.respostas.MovimentoResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
@@ -11,9 +10,7 @@ import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
-import javax.persistence.Id;
-import javax.print.attribute.standard.Media;
-import java.util.Comparator;
+
 import java.util.List;
 
 
