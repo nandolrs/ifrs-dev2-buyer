@@ -55,7 +55,7 @@ public class EmbalagemController {
             , produces = {MediaType.APPLICATION_JSON_VALUE}
     )
     public @ResponseBody
-    EmbalagemResponse Pesquisar(@RequestHeader HttpHeaders headers,@RequestParam String nome)
+    EmbalagemResponse Pesquisar(@RequestHeader HttpHeaders headers,@RequestParam String nome,@RequestParam float capacidade,@RequestParam Long unidadeMedidaId)
     {
         try
         {
@@ -65,9 +65,12 @@ public class EmbalagemController {
             {
                 retorno = repositorio.findByNomeContaining(nome);
             }
-            else
-            {
-                retorno = repositorio.findByNomeContaining(nome);
+            else if(capacidade>0) {
+                retorno = repositorio.findByCapacidade(capacidade);
+            }else if(unidadeMedidaId > 0){
+                retorno = repositorio.findByunidadeMedidaId(unidadeMedidaId);
+            }else{
+                retorno = repositorio.findByTudo();
             }
 
             retorno.sort(Comparator.comparing(Embalagem::getNome ));

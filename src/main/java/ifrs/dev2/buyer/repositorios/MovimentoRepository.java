@@ -18,4 +18,9 @@ public interface MovimentoRepository extends CrudRepository<Movimento, Long>{
         List<Movimento> findByTudo();
 
 
+        @Query("select m from Movimento m where m.estabelecimento.id = :estabelecimentoId")
+        List<Movimento> findByEstabelecimentoId(@Param("estabelecimentoId") Long estabelecimentoId);
+
+
+
 }

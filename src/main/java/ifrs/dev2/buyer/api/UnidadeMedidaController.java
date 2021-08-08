@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.persistence.Id;
 import javax.print.attribute.standard.Media;
+import java.util.Comparator;
 import java.util.List;
 
 @RestController
@@ -115,6 +116,35 @@ public class UnidadeMedidaController  {
 
         }
 
+    }
+
+    @GetMapping(
+            value = "listar"
+            , produces = {MediaType.APPLICATION_JSON_VALUE}
+    )
+    public @ResponseBody
+    UnidadeMedidaResponse Listar(@RequestHeader HttpHeaders headers)
+    {
+        try
+        {
+            String nome="";
+            List<UnidadeMedida> retorno = retorno = repositorio.findByNomeContaining(nome);
+
+            retorno.sort(Comparator.comparing(UnidadeMedida::getNome ));
+
+            return new UnidadeMedidaResponse( null,null,retorno);
+        }
+        catch(Exception e)
+        {
+            String msg = "deu merda";
+
+            ErroItem item = new ErroItem("",msg,-1L);
+            //ErroBase erroBase = new ErroBase(e);
+            ErroBase erroBase = new ErroBase(item);
+
+            UnidadeMedidaResponse retorno = new  UnidadeMedidaResponse(null, erroBase, null) ;
+            return retorno;
+        }
     }
 
 }
