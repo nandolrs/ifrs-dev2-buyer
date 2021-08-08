@@ -10,7 +10,8 @@ public class Cripto {
         MessageDigest md = MessageDigest.getInstance("MD5");
         byte[] senhaBaites = md.digest(senha.getBytes(StandardCharsets.UTF_8));
 
-        return senhaBaites.toString();
+        //return senhaBaites.toString();
+        return senha;
     }
 
     static public void TestarSenha() throws NoSuchAlgorithmException {

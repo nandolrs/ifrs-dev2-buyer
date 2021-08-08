@@ -1,14 +1,13 @@
 package ifrs.dev2.buyer.api;
 
 
-import ifrs.dev2.buyer.dados.Produto;
+
 import ifrs.dev2.buyer.dados.Usuario;
 
 import ifrs.dev2.buyer.erros.ErroBase;
 import ifrs.dev2.buyer.erros.ErroItem;
-
-import ifrs.dev2.buyer.respostas.ProdutoResponse;
 import ifrs.dev2.buyer.respostas.UsuarioResponse;
+import ifrs.dev2.buyer.segurancas.Cripto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
@@ -43,6 +42,11 @@ public class UsuarioController  {
 
         try
         {
+            if (entidade.getId() == 0){
+                Cripto cripto = new Cripto();
+                String senhaFechada = cripto.CifrarSenha(entidade.getSenha());
+                entidade.setSenha(senhaFechada);
+            }
             repositorio.save(entidade);
 
             return new UsuarioResponse( entidade,null,null);
