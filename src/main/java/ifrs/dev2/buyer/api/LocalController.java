@@ -1,11 +1,12 @@
 package ifrs.dev2.buyer.api;
 
-import ifrs.dev2.buyer.dados.Classe;
-import ifrs.dev2.buyer.dados.DadoInterface;
 import ifrs.dev2.buyer.dados.Local;
+import ifrs.dev2.buyer.dados.Usuario;
+
 import ifrs.dev2.buyer.erros.ErroBase;
 import ifrs.dev2.buyer.erros.ErroItem;
 import ifrs.dev2.buyer.respostas.LocalResponse;
+import ifrs.dev2.buyer.segurancas.Cripto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpHeaders;
@@ -17,6 +18,7 @@ import javax.persistence.Id;
 import javax.print.attribute.standard.Media;
 import java.util.Comparator;
 import java.util.List;
+import java.util.Optional;
 
 @RestController // This means that this class is a Controller
 @RequestMapping(path="/api/local") // This means URL's start with /demo (after Application path)
@@ -68,6 +70,11 @@ public class LocalController  {
     {
         try
         {
+            // busca o usurio autenticado
+
+            Cripto cripto  = new Cripto();
+            Usuario usuario = cripto.Token2Usuario(headers);
+
             List<Local> retorno = null;
 
             if(nome.length() > 0)
