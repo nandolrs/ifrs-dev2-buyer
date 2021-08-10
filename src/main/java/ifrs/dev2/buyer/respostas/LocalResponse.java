@@ -1,6 +1,7 @@
 package ifrs.dev2.buyer.respostas;
 
 import java.util.List;
+import java.util.Optional;
 
 public class LocalResponse {
 

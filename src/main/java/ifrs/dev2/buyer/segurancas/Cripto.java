@@ -13,8 +13,8 @@ import java.util.Optional;
 
 public class Cripto {
 
-    @Autowired
-    private UsuarioAutenticadorRepository repositorioUsuarioAutenticador;
+//    @Autowired
+//    private UsuarioAutenticadorRepository repositorioUsuarioAutenticador;
 
     static public String CifrarSenha(String senha) throws NoSuchAlgorithmException {
         MessageDigest md = MessageDigest.getInstance("MD5");
@@ -28,7 +28,7 @@ public class Cripto {
         String senhaFechada = CifrarSenha("deu merda");
     }
 
-    public Usuario Token2Usuario(HttpHeaders headers)
+    static public Usuario Token2Usuario(HttpHeaders headers,  UsuarioAutenticadorRepository repositorioUsuarioAutenticador) //
     {
         Usuario retorno = null;
 
@@ -38,7 +38,6 @@ public class Cripto {
         {
             return retorno;
         }
-
         Optional <UsuarioAutenticador>  usuarioAutenticador = repositorioUsuarioAutenticador.findBySessao(sessao);
 
         retorno = usuarioAutenticador.get().getUsuario();
