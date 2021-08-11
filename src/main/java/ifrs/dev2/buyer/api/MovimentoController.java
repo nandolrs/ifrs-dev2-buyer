@@ -3,6 +3,7 @@ package ifrs.dev2.buyer.api;
 import ifrs.dev2.buyer.dados.*;
 import ifrs.dev2.buyer.erros.ErroBase;
 import ifrs.dev2.buyer.erros.ErroItem;
+import ifrs.dev2.buyer.respostas.EmbalagemResponse;
 import ifrs.dev2.buyer.respostas.MovimentoResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
@@ -11,6 +12,8 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 
+import java.util.Comparator;
+import java.util.Date;
 import java.util.List;
 
 
@@ -30,33 +33,50 @@ import java.util.List;
                 , produces = {MediaType.APPLICATION_JSON_VALUE}
         )
         public @ResponseBody
-        Movimento Salvar(@RequestBody Movimento entidade) {
+        MovimentoResponse Salvar(@RequestHeader HttpHeaders headers, @RequestBody Movimento entidade) throws Exception {
 
-            repositorio.save(entidade);
+            try
+            {
+                repositorio.save(entidade);
 
-            return entidade;
+                return new MovimentoResponse( entidade,null,null);
+            }
+
+            catch(Exception e)
+            {
+                String msg = "deu merda";
+
+                ErroItem item = new ErroItem("",msg,-1L);
+                //ErroBase erroBase = new ErroBase(e);
+                ErroBase erroBase = new ErroBase(item);
+
+                MovimentoResponse retorno = new  MovimentoResponse(null, erroBase, null) ;
+                return retorno;
+            }
         }
 
         @GetMapping(
                 value = "pesquisar"
                 , produces = {MediaType.APPLICATION_JSON_VALUE}
         )
-        MovimentoResponse Pesquisar(@RequestHeader HttpHeaders headers, @RequestParam Long materialId)
+        MovimentoResponse Pesquisar(@RequestHeader HttpHeaders headers, @RequestParam Date dataMovimento, @RequestParam float quantidade, @RequestParam Long estabelecimentoId, @RequestParam Long materialId)
         {
-            try
-            {
+            try {
                 List<Movimento> retorno = null;
 
-                if(materialId > 0)
-                {
+                if (dataMovimento == new Date(0)) {
+                    retorno = repositorio.findBydataMovimentoContaining(dataMovimento);
+                } else if (quantidade > 0) {
+                    retorno = repositorio.findByQuantidadeContaining(quantidade);
+                } else if (estabelecimentoId > 0) {
+                    retorno = repositorio.findByEstabelecimentoId(estabelecimentoId);
+                } else if (materialId > 0) {
                     retorno = repositorio.findByMaterialId(materialId);
-                }
-                else
-                {
+                } else {
                     retorno = repositorio.findByTudo();
                 }
 
-                //retorno.sort(Comparator.comparing(Movimento::getTipo ));
+                retorno.sort(Comparator.comparing(Movimento::getNome ));
 
                 return new MovimentoResponse( null,null,retorno);
             }
@@ -116,4 +136,38 @@ import java.util.List;
                 return new MovimentoResponse(null, erroBase, null);
 
             }
-        }}
+        }
+        @GetMapping(
+                value = "listar"
+                , produces = {MediaType.APPLICATION_JSON_VALUE}
+        )
+        public @ResponseBody
+        MovimentoResponse Listar(@RequestHeader HttpHeaders headers, @RequestParam Date dataMovimento)
+        {
+            try
+            {
+                String nome="";
+                List<Movimento> retorno = retorno = repositorio.findBydataMovimentoContaining(dataMovimento);
+
+                retorno.sort(Comparator.comparing(Movimento::getNome ));
+
+                return new MovimentoResponse( null,null,retorno);
+            }
+            catch(Exception e)
+            {
+                String msg = "deu merda";
+
+                ErroItem item = new ErroItem("",msg,-1L);
+                //ErroBase erroBase = new ErroBase(e);
+                ErroBase erroBase = new ErroBase(item);
+
+                MovimentoResponse retorno = new  MovimentoResponse(null, erroBase, null) ;
+                return retorno;
+            }
+        }
+
+
+
+
+    }
+
