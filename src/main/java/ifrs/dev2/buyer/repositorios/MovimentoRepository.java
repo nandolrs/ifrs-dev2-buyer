@@ -12,9 +12,9 @@ import java.util.List;
 
 public interface MovimentoRepository extends CrudRepository<Movimento, Long>{
 
-        List<Movimento> findBydataMovimentoContaining(Date dataMovimento);
+        List<Movimento> findBydataMovimento(Date dataMovimento);
 
-        List<Movimento> findByQuantidadeContaining(float capacidade);
+        List<Movimento> findByQuantidade(float quantidade);
 
         @Query("select m from Movimento m where m.material.id = :materialId")
         List<Movimento> findByMaterialId(@Param("materialId") Long materialId);

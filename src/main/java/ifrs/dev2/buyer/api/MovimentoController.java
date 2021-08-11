@@ -59,15 +59,15 @@ import java.util.List;
                 value = "pesquisar"
                 , produces = {MediaType.APPLICATION_JSON_VALUE}
         )
-        MovimentoResponse Pesquisar(@RequestHeader HttpHeaders headers, @RequestParam Date dataMovimento, @RequestParam float quantidade, @RequestParam Long estabelecimentoId, @RequestParam Long materialId)
+        MovimentoResponse Pesquisar(@RequestHeader HttpHeaders headers, @RequestParam float quantidade, @RequestParam Long estabelecimentoId, @RequestParam Long materialId)//@RequestParam Date dataMovimento
         {
             try {
                 List<Movimento> retorno = null;
-
+                Date dataMovimento=new Date(0);
                 if (dataMovimento == new Date(0)) {
-                    retorno = repositorio.findBydataMovimentoContaining(dataMovimento);
+                    retorno = repositorio.findBydataMovimento(dataMovimento);
                 } else if (quantidade > 0) {
-                    retorno = repositorio.findByQuantidadeContaining(quantidade);
+                    retorno = repositorio.findByQuantidade(quantidade);
                 } else if (estabelecimentoId > 0) {
                     retorno = repositorio.findByEstabelecimentoId(estabelecimentoId);
                 } else if (materialId > 0) {
@@ -147,7 +147,7 @@ import java.util.List;
             try
             {
                 String nome="";
-                List<Movimento> retorno = retorno = repositorio.findBydataMovimentoContaining(dataMovimento);
+                List<Movimento> retorno = retorno = repositorio.findBydataMovimento(dataMovimento);
 
                 retorno.sort(Comparator.comparing(Movimento::getNome ));
 
