@@ -41,7 +41,7 @@ public class UsuarioAutenticadorController {
     )
 
     public @ResponseBody
-    UsuarioAutenticadorResponse Autenticar (@RequestHeader HttpHeaders headers, @RequestParam String email, @RequestParam String senha) throws Exception {
+    UsuarioAutenticadorResponse Autenticar (@RequestHeader HttpHeaders headers, @RequestParam String email, @RequestParam String senha, @RequestParam String tokenSessao) throws Exception {
         // @ResponseBody means the returned String is the response, not a view name
         // @RequestParam means it is a parameter from the GET or POST request
 
@@ -51,6 +51,19 @@ public class UsuarioAutenticadorController {
 
             Usuario usuario = new Usuario();
 
+            if (tokenSessao.length() > 0)
+            {
+                UsuarioAutenticador entidade = repositorio.findBySessao(tokenSessao).get();
+
+                if(entidade != null)
+                {
+                    UsuarioAutenticadorResponse respFront = new UsuarioAutenticadorResponse( entidade,null,null);
+                    respFront.setConfirmacao("Sucesso!");
+                    return respFront;
+
+                }
+
+            }
             if(email.length() > 0)
             {
                 usuarioLista = repositorioUsuario.findByEmail(email);
