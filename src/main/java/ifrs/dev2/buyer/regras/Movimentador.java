@@ -1,8 +1,6 @@
 package ifrs.dev2.buyer.regras;
 
 import ifrs.dev2.buyer.dados.Estoque;
-import ifrs.dev2.buyer.dados.Local;
-import ifrs.dev2.buyer.dados.Material;
 import ifrs.dev2.buyer.dados.Movimento;
 
 import ifrs.dev2.buyer.repositorios.LocalRepository;
@@ -10,7 +8,6 @@ import ifrs.dev2.buyer.repositorios.MaterialRepository;
 import ifrs.dev2.buyer.repositorios.EstoqueRepository;
 
 import java.util.List;
-import java.util.Optional;
 
 public class Movimentador {
     LocalRepository localRepositorio;
@@ -42,7 +39,7 @@ public class Movimentador {
         //Long localId = movimento.getLocal().getId();
         //Long materialId = movimento.getMaterial().getId();
 
-        List<Estoque> estoqueAtualLista = estoqueRepositorio.findByXXX(movimento.getLocal().getId()
+        List<Estoque> estoqueAtualLista = estoqueRepositorio.PesquisarPorLocalEMaterial(movimento.getLocal().getId()
                 , movimento.getMaterial().getId()
         );
 

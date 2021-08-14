@@ -12,20 +12,36 @@ import java.util.Optional;
 public interface EstoqueRepository extends CrudRepository<Estoque, Long> {
 
     @Query(value = "\n" +
-            "select e.*\n" +
-            "from estoque e\n" +
-            "where e.local_id  = :localId\n" +
-            "and e.material_id = :materialId;\n"
-            , nativeQuery = true)
-    List <Estoque> findByXXX1(@Param("localId") Long localId, @Param("materialId") Long materialId );
-
-
-    @Query(value = "\n" +
             "select e\n" +
             "from Estoque e\n" +
             "where e.local.id  = :localId\n" +
             "and e.material.id = :materialId\n"
             , nativeQuery = false)
-    List <Estoque> findByXXX(@Param("localId") Long localId, @Param("materialId") Long materialId );
+    List <Estoque> PesquisarPorLocalEMaterial(@Param("localId") Long localId, @Param("materialId") Long materialId );
+
+    @Query(value = "\n" +
+            "select e\n" +
+            "from Estoque e\n" +
+            "where e.local.id  = :localId\n" +
+            "and e.local.usuario.id  = :usuarioId\n"
+            , nativeQuery = false)
+    List <Estoque> PesquisarPorLocal(@Param("localId") Long localId,@Param("usuarioId") Long usuarioId);
+
+
+    @Query(value = "\n" +
+            "select e\n" +
+            "from Estoque e\n" +
+            "where e.material.id = :materialId\n"+
+            "and e.local.usuario.id  = :usuarioId\n"
+            , nativeQuery = false)
+    List <Estoque> PesquisarPorMaterial(@Param("materialId") Long materialId, @Param("usuarioId") Long usuarioId );
+
+
+    @Query(value = "\n" +
+            "select e\n" +
+            "from Estoque e\n" +
+            "where e.local.usuario.id  = :usuarioId\n"
+            , nativeQuery = false)
+    List <Estoque> findByTudo(@Param("usuarioId") Long usuarioId );
 
 }
