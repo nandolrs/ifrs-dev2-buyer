@@ -30,4 +30,12 @@ public class ReceitaMaterial {
     public void setMaterial(Material material) {
         this.material = material;
     }
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
 }

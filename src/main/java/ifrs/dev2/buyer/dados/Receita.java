@@ -19,8 +19,8 @@ public class Receita {
     @OneToOne
     private Produto produto;
 
-    //@OneToMany
-    //private Set<Material> materiais;
+    @OneToOne
+    private Usuario usuario;
 
     public Long getId() {
         return id;
@@ -44,6 +44,14 @@ public class Receita {
 
     public void setProduto(Produto produto) {
         this.produto = produto;
+    }
+
+    public Usuario getUsuario() {
+        return usuario;
+    }
+
+    public void setUsuario(Usuario usuario) {
+        this.usuario = usuario;
     }
 
     /*
