@@ -50,7 +50,7 @@ import java.util.List;
                 , produces = {MediaType.APPLICATION_JSON_VALUE}
         )
         public @ResponseBody
-        @Transactional(isolation = Isolation.SERIALIZABLE)
+        @Transactional(isolation = Isolation.DEFAULT)
         MovimentoResponse Salvar(@RequestHeader HttpHeaders headers, @RequestBody Movimento entidade) throws Exception {
 
             try
@@ -61,7 +61,7 @@ import java.util.List;
                 movimentador.Movimentar(entidade);
 
                 // salva
-                repositorio.save(entidade);
+                entidade = repositorio.save(entidade);
 
                 return new MovimentoResponse( entidade,null,null);
             }
@@ -83,7 +83,7 @@ import java.util.List;
                 value = "pesquisar"
                 , produces = {MediaType.APPLICATION_JSON_VALUE}
         )
-        MovimentoResponse Pesquisar(@RequestHeader HttpHeaders headers, @RequestParam float quantidade, @RequestParam Long estabelecimentoId, @RequestParam Long materialId, @RequestParam Long tipo)//@RequestParam Date dataMovimento
+        MovimentoResponse Pesquisar(@RequestHeader HttpHeaders headers, @RequestParam float quantidade, @RequestParam Long estabelecimentoId, @RequestParam Long materialId, @RequestParam Long tipo, @RequestParam Long localId)//@RequestParam Date dataMovimento
         {
             try {
                 Usuario usuario = Cripto.Token2Usuario(headers,repositorioUsuarioAutenticador); //

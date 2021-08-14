@@ -21,16 +21,13 @@ public class Movimento {
     Float quantidade;
     Float valorUnitario;
     Float valorTotal;
-    private Long tipo; // 0 nao usar, 1=entrada, 2=saida, 3=compra,  4=cotacao
+    private Long tipo; // 0 nao usar, 1=entrada, 2=saida, 3=compra,  4=cotacao, 5=lista
 
-
-    @OneToOne
+    @OneToOne(optional = true)
     private Estabelecimento estabelecimento;
-
 
     @OneToOne
     private Material material;
-
 
     @OneToOne
     private
