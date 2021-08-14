@@ -1,11 +1,13 @@
 package ifrs.dev2.buyer.api;
 
+import ifrs.dev2.buyer.dados.Estabelecimento;
 import ifrs.dev2.buyer.dados.Local;
 import ifrs.dev2.buyer.dados.Usuario;
 
 
 import ifrs.dev2.buyer.erros.ErroBase;
 import ifrs.dev2.buyer.erros.ErroItem;
+import ifrs.dev2.buyer.respostas.EstabelecimentoResponse;
 import ifrs.dev2.buyer.respostas.LocalResponse;
 import ifrs.dev2.buyer.segurancas.Cripto;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -160,6 +162,36 @@ public class LocalController  {
 
     void ErroLancar() throws Exception {
         throw new Exception("deu merda");
+    }
+
+    @GetMapping(
+            value = "listar"
+            , produces = {MediaType.APPLICATION_JSON_VALUE}
+    )
+    public @ResponseBody
+    LocalResponse Listar(@RequestHeader HttpHeaders headers)
+    {
+        try
+        {
+            Usuario usuario = Cripto.Token2Usuario(headers,repositorioUsuarioAutenticador); //
+
+            List<Local> retorno = retorno = repositorio.PesquisarTudo(usuario.getId());
+
+            retorno.sort(Comparator.comparing(Local::getNome));
+
+            return new LocalResponse( null,null,retorno);
+        }
+        catch(Exception e)
+        {
+            String msg = "deu merda";
+
+            ErroItem item = new ErroItem("",msg,-1L);
+            //ErroBase erroBase = new ErroBase(e);
+            ErroBase erroBase = new ErroBase(item);
+
+            LocalResponse retorno = new  LocalResponse(null, erroBase, null) ;
+            return retorno;
+        }
     }
 
 }

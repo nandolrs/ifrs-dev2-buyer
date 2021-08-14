@@ -31,6 +31,11 @@ public class Movimento {
     @OneToOne
     private Material material;
 
+
+    @OneToOne
+    private
+    Local local;
+
     // id
 
     public Long getId()
@@ -122,16 +127,13 @@ public class Movimento {
     }
 
 
+    // local
 
+    public Local getLocal() {
+        return local;
+    }
 
-
-
-
-
-
-
-
-
-
-
+    public void setLocal(Local local) {
+        this.local = local;
+    }
 }
