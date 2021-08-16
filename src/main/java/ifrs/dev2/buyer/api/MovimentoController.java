@@ -154,6 +154,7 @@ import java.util.List;
 
             Movimento retorno = new Movimento();
             try {
+                Long usuarioId = Cripto.Token2Usuario(headers,repositorioUsuarioAutenticador).getId();
                 retorno = repositorio.findById(id).get();
 
                 return new MovimentoResponse(retorno, null, null);
