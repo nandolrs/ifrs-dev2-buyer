@@ -40,7 +40,7 @@ public class ReceitaController {
 
         try {
             entidade.setUsuario(Cripto.Token2Usuario(headers,repositorioUsuarioAutenticador));
-            repositorio.save(entidade);
+            entidade = repositorio.save(entidade);
 
             return new ReceitaResponse(entidade, null, null);
         } catch (Exception e) {

@@ -123,7 +123,7 @@ public class ReceitaMaterialController {
     public @ResponseBody
     ReceitaMaterialResponse Listar(@RequestHeader HttpHeaders headers) {
         try {
-            Long receitaId = Long.valueOf("");
+            Long receitaId = Long.valueOf(0);
             List<ReceitaMaterial> retorno = retorno = repositorio.findByReceitaId(receitaId);
 
             return new ReceitaMaterialResponse(null, null, retorno);
