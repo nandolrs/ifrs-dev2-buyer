@@ -5,6 +5,7 @@ import ifrs.dev2.buyer.dados.Produto;
 import ifrs.dev2.buyer.dados.Usuario;
 import ifrs.dev2.buyer.erros.ErroBase;
 import ifrs.dev2.buyer.erros.ErroItem;
+import ifrs.dev2.buyer.respostas.ClasseResponse;
 import ifrs.dev2.buyer.respostas.EstoqueResponse;
 import ifrs.dev2.buyer.segurancas.Cripto;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -43,17 +44,16 @@ public class EstoqueController {
             if(localId > 0)
             {
                 retorno = repositorio.PesquisarPorLocal(localId,usuario.getId());
-            } if (materialId > 0)
+            } else if (materialId > 0)
             {
                 retorno = repositorio.PesquisarPorMaterial(materialId,usuario.getId());
-
             }
             else
             {
                 retorno = repositorio.findByTudo(usuario.getId());
             }
 
-            retorno.sort(Comparator.comparing(Estoque::getQuantidade ));
+            //retorno.sort(Comparator.comparing(Estoque::getQuantidade ));
 
             return new EstoqueResponse( null,null,retorno);
         }
@@ -135,5 +135,34 @@ public class EstoqueController {
         }
     }
 
+
+    @PostMapping(
+            value = "salvar"
+            , consumes = {MediaType.APPLICATION_JSON_VALUE}
+            , produces = {MediaType.APPLICATION_JSON_VALUE}
+    )
+
+    public @ResponseBody
+    ifrs.dev2.buyer.respostas.EstoqueResponse Salvar(@RequestHeader HttpHeaders headers, @RequestBody ifrs.dev2.buyer.dados.Estoque entidade) throws Exception {
+
+        try
+        {
+            repositorio.save(entidade);
+
+            return new EstoqueResponse( entidade,null,null);
+        }
+
+        catch(Exception e)
+        {
+            String msg = "deu merda";
+
+            ErroItem item = new ErroItem("",msg,-1L);
+            //ErroBase erroBase = new ErroBase(e);
+            ErroBase erroBase = new ErroBase(item);
+
+            EstoqueResponse retorno = new  EstoqueResponse(null, erroBase, null) ;
+            return retorno;
+        }
+    }
 
 }
