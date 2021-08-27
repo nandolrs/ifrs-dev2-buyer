@@ -43,6 +43,10 @@ public class Movimentador {
             if (estoqueAtualLista.size() > 0) // existe
             {
                 estoqueAtual = estoqueAtualLista.get(0);
+                if(estoqueAtual.getQuantidade() == null)
+                {
+                    estoqueAtual.setQuantidade(0F);
+                }
             }
             else
             {
