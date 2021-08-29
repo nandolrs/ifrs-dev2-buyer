@@ -43,13 +43,24 @@ public class UnidadeMedidaController  {
             , produces = {MediaType.APPLICATION_JSON_VALUE}
     )
     public @ResponseBody
-    UnidadeMedidaResponse Pesquisar(@RequestHeader HttpHeaders headers, @RequestParam String nome) {
+    UnidadeMedidaResponse Pesquisar(@RequestHeader HttpHeaders headers, @RequestParam String nome,@RequestParam String sigla) {
 
         try
         {
-            List<UnidadeMedida> retorno = repositorio.findByNomeContaining(nome);
+            List<UnidadeMedida> retorno = null;
 
-//            return retorno;
+            if(nome.length() > 0)
+            {
+                retorno = repositorio.findByNomeContaining(nome);
+            }
+            else if(sigla.length() >0) {
+                retorno = repositorio.findBySiglaContaining(sigla);
+            }else{
+                retorno = repositorio.findByTudo();
+            }
+
+            retorno.sort(Comparator.comparing(UnidadeMedida::getNome ));
+
             return new UnidadeMedidaResponse( null,null,retorno);
 
         }
