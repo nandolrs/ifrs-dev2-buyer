@@ -46,9 +46,9 @@ public class InfoController {
     {
         try
         {
-            //Usuario usuario = Cripto.Token2Usuario(headers,repositorioUsuarioAutenticador); //
+            Usuario usuario = Cripto.Token2Usuario(headers,repositorioUsuarioAutenticador); //
 
-            List<EstoquePorClasse> retorno = Painel();
+            List<EstoquePorClasse> retorno = Painel(usuario);
 
 //            retorno.sort(Comparator.comparing(Local::getNome ));
 
@@ -68,15 +68,14 @@ public class InfoController {
         }
     }
 
-    List<EstoquePorClasse> Painel() throws SQLException {
+    List<EstoquePorClasse> Painel(Usuario usuario) throws SQLException {
 
         DataSource ds = (DataSource)ac.getBean("dataSource");
         Connection c = ds.getConnection();
 
-
         String sql = "select * from local";
 
-        sql = "SELECT c.id, c.nome ,sum(e.quantidade) quantidade FROM dbbuyer.estoque e join dbbuyer.local l on l.id=e.local_id join dbbuyer.usuario u on u.id=l.usuario_id join dbbuyer.material m on m.id=e.material_id join dbbuyer.produto p on p.id=m.produto_id join dbbuyer.classe c on c.id=p.classe_id where u.email='nandolrs.dev@gmail.com' group by c.id, c.nome ";
+        sql = "SELECT c.id, c.nome ,sum(e.quantidade) quantidade FROM dbbuyer.estoque e join dbbuyer.local l on l.id=e.local_id join dbbuyer.usuario u on u.id=l.usuario_id join dbbuyer.material m on m.id=e.material_id join dbbuyer.produto p on p.id=m.produto_id join dbbuyer.classe c on c.id=p.classe_id where u.id = " + usuario.getId().toString() + "  group by c.id, c.nome ";
 
         Statement statement  = c.createStatement();
         ResultSet rs = statement.executeQuery(sql);
