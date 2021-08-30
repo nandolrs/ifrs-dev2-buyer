@@ -48,7 +48,7 @@ public class InfoController {
         {
             Usuario usuario = Cripto.Token2Usuario(headers,repositorioUsuarioAutenticador); //
 
-            List<EstoquePorClasse> retorno = Painel(usuario);
+            List<EstoquePorClasse> retorno = PesquisarEstoquePorClasseSql(usuario);
 
 //            retorno.sort(Comparator.comparing(Local::getNome ));
 
@@ -68,17 +68,11 @@ public class InfoController {
         }
     }
 
-    List<EstoquePorClasse> Painel(Usuario usuario) throws SQLException {
+    List<EstoquePorClasse> PesquisarEstoquePorClasseSql(Usuario usuario) throws SQLException {
 
-        DataSource ds = (DataSource)ac.getBean("dataSource");
-        Connection c = ds.getConnection();
+        String sql = "SELECT c.id, c.nome ,sum(e.quantidade) quantidade FROM dbbuyer.estoque e join dbbuyer.local l on l.id=e.local_id join dbbuyer.usuario u on u.id=l.usuario_id join dbbuyer.material m on m.id=e.material_id join dbbuyer.produto p on p.id=m.produto_id join dbbuyer.classe c on c.id=p.classe_id where u.id = " + usuario.getId().toString() + "  group by c.id, c.nome ";
 
-        String sql = "select * from local";
-
-        sql = "SELECT c.id, c.nome ,sum(e.quantidade) quantidade FROM dbbuyer.estoque e join dbbuyer.local l on l.id=e.local_id join dbbuyer.usuario u on u.id=l.usuario_id join dbbuyer.material m on m.id=e.material_id join dbbuyer.produto p on p.id=m.produto_id join dbbuyer.classe c on c.id=p.classe_id where u.id = " + usuario.getId().toString() + "  group by c.id, c.nome ";
-
-        Statement statement  = c.createStatement();
-        ResultSet rs = statement.executeQuery(sql);
+        ResultSet rs = Pesquisar(sql);
 
         List<EstoquePorClasse> retorno = new ArrayList<>();
         while(rs.next())
@@ -102,5 +96,74 @@ public class InfoController {
         return retorno;
     }
 
+    @GetMapping(
+            value = "pesquisarPontoMinimoPorClasse"
+            , produces = {MediaType.APPLICATION_JSON_VALUE}
+    )
+
+    public @ResponseBody
+    EstoquePorClasseResponse PesquisarPontoMinimoPorClasse(@RequestHeader HttpHeaders headers, @RequestParam String nome) // @RequestHeader HttpHeaders headers,
+    {
+        try
+        {
+            Usuario usuario = Cripto.Token2Usuario(headers,repositorioUsuarioAutenticador); //
+
+            List<EstoquePorClasse> retorno = PesquisarPontoMinimoPorClasseSql(usuario);
+
+//            retorno.sort(Comparator.comparing(Local::getNome ));
+
+            return new EstoquePorClasseResponse( null,null,retorno);
+        }
+        catch(Exception e)
+        {
+            String msg = "deu merda";
+
+            ErroItem item = new ErroItem("",msg,-1L);
+            //ErroBase erroBase = new ErroBase(e);
+            ErroBase erroBase = new ErroBase(item);
+
+            EstoquePorClasseResponse retorno = new  EstoquePorClasseResponse(null, erroBase, null) ;
+
+            return retorno;
+        }
+    }
+
+    ResultSet Pesquisar(String sql) throws SQLException {
+        DataSource ds = (DataSource)ac.getBean("dataSource");
+        Connection c = ds.getConnection();
+
+        Statement statement  = c.createStatement();
+        ResultSet rs = statement.executeQuery(sql);
+
+        return rs;
+    }
+
+    List<EstoquePorClasse> PesquisarPontoMinimoPorClasseSql(Usuario usuario) throws SQLException {
+
+        String sql = "SELECT c.id, c.nome ,sum(e.quantidade) quantidade FROM dbbuyer.estoque e join dbbuyer.local l on l.id=e.local_id join dbbuyer.usuario u on u.id=l.usuario_id join dbbuyer.material m on m.id=e.material_id join dbbuyer.produto p on p.id=m.produto_id join dbbuyer.classe c on c.id=p.classe_id where u.id = " + usuario.getId().toString() + " and ( e.quantidade < e.ponto_minimo )  group by c.id, c.nome ";
+
+        ResultSet rs = Pesquisar(sql);
+
+        List<EstoquePorClasse> retorno = new ArrayList<>();
+        while(rs.next())
+        {
+            Long id = rs.getLong("id");
+
+            String nome =  rs.getString("nome");
+
+            Float quantidade =  rs.getFloat("quantidade");
+
+            EstoquePorClasse estoquePorClasse = new EstoquePorClasse();
+            estoquePorClasse.setClasseId(id);
+            estoquePorClasse.setClasseNome(nome);
+            estoquePorClasse.setEstoqueQuantidade(quantidade);
+
+            Long l = 0L;
+            retorno.add(estoquePorClasse);
+
+        }
+
+        return retorno;
+    }
 
 }
